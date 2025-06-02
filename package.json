@@ -1,0 +1,16 @@
+{
+    "name": "guide-spirituel-bot",
+    "version": "1.0.0",
+    "description": "Bot spirituel Telegram avec OpenRouter",
+    "main": "bot.js",
+    "scripts": {
+      "start": "node webhook.js"
+    },
+    "dependencies": {
+      "axios": "^1.6.0",
+      "dotenv": "^16.3.1",
+      "express": "^4.18.2",
+      "telegraf": "^4.12.2"
+    }
+  }
+  

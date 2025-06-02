@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: guide-spirituel-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node webhook.js
+    envVars:
+      - key: BOT_TOKEN
+        value: ton_token_telegram
+      - key: OPENROUTER_API_KEY
+        value: sk-or-v1-...
+      - key: PORT
+        value: 3000

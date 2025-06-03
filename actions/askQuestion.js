@@ -1,16 +1,10 @@
-const ai = require('../utils/ai');
-
 module.exports = async (ctx) => {
-  await ctx.reply("🧘 Pose-moi ta question spirituelle.");
+  // Initialiser la session si elle n'existe pas
   ctx.session ??= {};
+
+  // Indiquer que le bot attend une question spirituelle
   ctx.session.expectingQuestion = true;
 
-  ctx.telegram.on('text', async (messageCtx) => {
-    if (ctx.session.expectingQuestion) {
-      const question = messageCtx.message.text;
-      const response = await ai.ask(question);
-      await messageCtx.reply(`📖 Réponse :\n${response}`);
-      ctx.session.expectingQuestion = false;
-    }
-  });
+  // Envoyer un message à l'utilisateur
+  await ctx.reply("🧘 Pose-moi ta question spirituelle.");
 };

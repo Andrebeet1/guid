@@ -4,7 +4,7 @@ module.exports = {
   ask: async (question) => {
     try {
       const res = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
-        model: 'mistral/mistral-7b-instruct',
+        model: 'openai/gpt-3.5-turbo',
         messages: [
           { role: 'system', content: 'Tu es un guide spirituel chrétien bienveillant.' },
           { role: 'user', content: question }

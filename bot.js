@@ -4,38 +4,47 @@ const { Telegraf, session } = require('telegraf');
 const startCommand = require('./commands/start');
 const prayerCommand = require('./commands/prayer');
 const helpCommand = require('./commands/help');
+const noteCommand = require('./commands/note');
+
 const askQuestion = require('./actions/askQuestion');
 const otherButtons = require('./actions/otherButtons');
 const ai = require('./utils/ai');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// Activer la session pour garder le contexte utilisateur
+// Middleware de session
 bot.use(session());
 
-// Commande /start affiche le menu avec boutons
+// === Commandes classiques ===
 bot.start(startCommand);
+bot.command('prayer', prayerCommand);
+bot.command('help', helpCommand);
+bot.command('note', noteCommand); // ➕ Note du jour
 
-// Gestion des boutons inline (callback_query)
+// === Boutons ===
 bot.on('callback_query', async (ctx) => {
   const data = ctx.callbackQuery.data;
 
-  switch (data) {
-    case 'ask_question':
-      return askQuestion(ctx);
-
-    case 'prayer_request':
-      return prayerCommand(ctx);
-
-    case 'help_info':
-      return helpCommand(ctx);
-
-    default:
-      return otherButtons(ctx);
+  if (data === 'ask_question') {
+    return askQuestion(ctx);
   }
+
+  if (data === 'prayer') {
+    return prayerCommand(ctx);
+  }
+
+  if (data === 'note') {
+    return noteCommand(ctx);
+  }
+
+  if (data === 'help') {
+    return helpCommand(ctx);
+  }
+
+  return otherButtons(ctx); // pour tout autre bouton futur
 });
 
-// Gestion des messages texte pour répondre aux questions posées après clic sur "Poser une question"
+// === Réception des messages ===
 bot.on('text', async (ctx) => {
   ctx.session ??= {};
 
@@ -54,4 +63,5 @@ bot.on('text', async (ctx) => {
   }
 });
 
+// === Export du bot ===
 module.exports = bot;

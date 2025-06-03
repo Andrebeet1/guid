@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Telegraf, session } = require('telegraf'); // ✅ bonne syntaxe
+const { Telegraf, session } = require('telegraf');
 
 const startCommand = require('./commands/start');
 const prayerCommand = require('./commands/prayer');
@@ -10,23 +10,32 @@ const ai = require('./utils/ai');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// ✅ Utilisation correcte de session
+// Activer la session pour garder le contexte utilisateur
 bot.use(session());
 
-// Commandes
+// Commande /start affiche le menu avec boutons
 bot.start(startCommand);
-bot.command('prayer', prayerCommand);
-bot.command('help', helpCommand);
 
-// Boutons
+// Gestion des boutons inline (callback_query)
 bot.on('callback_query', async (ctx) => {
   const data = ctx.callbackQuery.data;
 
-  if (data === 'ask_question') return askQuestion(ctx);
-  return otherButtons(ctx);
+  switch (data) {
+    case 'ask_question':
+      return askQuestion(ctx);
+
+    case 'prayer_request':
+      return prayerCommand(ctx);
+
+    case 'help_info':
+      return helpCommand(ctx);
+
+    default:
+      return otherButtons(ctx);
+  }
 });
 
-// Réception des messages
+// Gestion des messages texte pour répondre aux questions posées après clic sur "Poser une question"
 bot.on('text', async (ctx) => {
   ctx.session ??= {};
 
@@ -45,5 +54,4 @@ bot.on('text', async (ctx) => {
   }
 });
 
-// Export
 module.exports = bot;

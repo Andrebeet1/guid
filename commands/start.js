@@ -1,14 +1,15 @@
+const { Markup } = require('telegraf');
+
 module.exports = async (ctx) => {
+  const fullName = ctx.from.first_name || 'Bien-aimé';
+
   await ctx.reply(
-    `🙏 Bienvenue dans ton guide spirituel ! Que puis-je faire pour toi aujourd'hui ?`,
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "🧘 Pose une question spirituelle", callback_data: "ask_question" }],
-          [{ text: "🙏 Demande de prière", callback_data: "prayer_request" }],
-          [{ text: "❓ Aide / Informations", callback_data: "help_info" }]
-        ]
-      }
-    }
+    `🕊️ Bonjour ${fullName} !\n\nJe suis ton assistant spirituel personnel.\nJe peux t'aider à prier, à poser une question, ou à méditer une note du jour.\n\nSélectionne une option ci-dessous 👇`,
+    Markup.inlineKeyboard([
+      [Markup.button.callback('🙏 Prière du jour', 'prayer')],
+      [Markup.button.callback('📖 Note du jour', 'note')],
+      [Markup.button.callback('🧘 Poser une question', 'ask_question')],
+      [Markup.button.callback('ℹ️ Aide', 'help')],
+    ])
   );
 };
